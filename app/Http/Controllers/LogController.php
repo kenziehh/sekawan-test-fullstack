@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LogResource;
 use App\Models\Log;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $logs = Log::all();
+        return LogResource::collection($logs);
     }
 
     /**
@@ -20,7 +22,7 @@ class LogController extends Controller
      */
     public function create()
     {
-        //
+        return response()->json(['message' => 'This endpoint is not applicable for API-based resource creation.']);
     }
 
     /**
@@ -28,7 +30,15 @@ class LogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'action' => 'required|string|max:255',
+            'description' => 'required|string',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        $log = Log::create($validated);
+
+        return response()->json(["message" => "Log created successfully", "log" => $log], 201);
     }
 
     /**
@@ -36,7 +46,7 @@ class LogController extends Controller
      */
     public function show(Log $log)
     {
-        //
+        return new LogResource($log);
     }
 
     /**
@@ -44,7 +54,7 @@ class LogController extends Controller
      */
     public function edit(Log $log)
     {
-        //
+        return response()->json(['message' => 'This endpoint is not applicable for API-based resource editing.']);
     }
 
     /**
@@ -52,7 +62,15 @@ class LogController extends Controller
      */
     public function update(Request $request, Log $log)
     {
-        //
+        $validated = $request->validate([
+            'action' => 'required|string|max:255',
+            'description' => 'required|string',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        $log->update($validated);
+
+        return response()->json(["message" => "Log updated successfully", "log" => $log]);
     }
 
     /**
@@ -60,6 +78,8 @@ class LogController extends Controller
      */
     public function destroy(Log $log)
     {
-        //
+        $log->delete();
+
+        return response()->json(["message" => "Log deleted successfully"]);
     }
 }
