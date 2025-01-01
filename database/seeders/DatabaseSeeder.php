@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ApprovalLevel;
 use App\Models\Driver;
+use App\Models\Log;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -57,11 +58,18 @@ class DatabaseSeeder extends Seeder
 
             // Create approval levels (minimum 2 per order)
             foreach (range(1, 2) as $level) {
+                $approver = User::where('role', 'approver')->inRandomOrder()->first();
                 ApprovalLevel::create([
                     'order_id' => $order->id,
                     'approver_id' => User::where('role', 'approver')->inRandomOrder()->first()->id,
                     'status' => 'approved',
                 ]);
+                Log::create([
+                    'action' => 'Approval',
+                    'description' => "Approver {$approver->name} approved order {$order->id}",
+                    'user_id' => $approver->id,
+                ]);
+
             }
         }
 
@@ -78,10 +86,16 @@ class DatabaseSeeder extends Seeder
 
             // Create approval levels (minimum 2 per order)
             foreach (range(1, 2) as $level) {
+                $approver = User::where('role', 'approver')->inRandomOrder()->first();
                 ApprovalLevel::create([
                     'order_id' => $order->id,
                     'approver_id' => User::where('role', 'approver')->inRandomOrder()->first()->id,
                     'status' => 'pending',
+                ]);
+                Log::create([
+                    'action' => 'Approval',
+                    'description' => "Approver {$approver->name} is assigned for order {$order->id}",
+                    'user_id' => $approver->id,
                 ]);
             }
         }
