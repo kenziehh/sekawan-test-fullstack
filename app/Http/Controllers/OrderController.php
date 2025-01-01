@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApprovalLevel;
 use App\Models\Driver;
+use App\Models\Log;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -41,6 +43,40 @@ class OrderController extends Controller
             'orders' => $data,
         ]);
     }
+
+    public function approveOrder(Request $request, $orderId)
+    {
+        $userId = auth()->id();
+
+        $approvalLevel = \App\Models\ApprovalLevel::where('order_id', $orderId)
+            ->where('approver_id', $userId)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$approvalLevel) {
+            return response()->json(['message' => 'Order tidak ditemukan atau sudah di-approve.'], 404);
+        }
+
+        $approvalLevel->update(['status' => 'approved']);
+
+        Log::create([
+            'action' => 'Approval',
+            'description' => "User {$userId} approved order {$orderId}",
+            'user_id' => $userId,
+        ]);
+
+        $allApproved = ApprovalLevel::where('order_id', $orderId)
+            ->where('status', 'pending')
+            ->doesntExist();
+
+        if ($allApproved) {
+            Order::where('id', $orderId)->update(['status' => 'approved']);
+        }
+
+        return response()->json(['message' => 'Order berhasil di-approve.'], 200);
+    }
+
+
     /**
      * Display a listing of the resource.
      */

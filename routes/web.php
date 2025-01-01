@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
 
     //Approver
     Route::get('/dashboard/approver', [OrderController::class, 'approver'])->name('vehicle.index');
-
+    Route::post('/orders/{orderId}/approve', [OrderController::class, 'approveOrder'])->name('orders.approve');
 });
 
 require __DIR__ . '/auth.php';

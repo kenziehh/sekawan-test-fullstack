@@ -7,6 +7,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import Sidebar from "@/Components/Sidebar";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
+import { Toaster } from "sonner";
 
 export default function Authenticated({
     header,
@@ -20,6 +21,12 @@ export default function Authenticated({
 
     return (
         <main className="w-full flex flex-row">
+            <Toaster
+                position="top-center"
+                pauseWhenPageIsHidden={true}
+                theme="dark"
+                richColors={true}
+            />
             <Sidebar />
             {/* <FloatingSidebar isOpen={isOpen} setIsOpen={setIsOpen} /> */}
 

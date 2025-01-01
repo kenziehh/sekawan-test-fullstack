@@ -3,10 +3,21 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Order } from "@/types/order";
 import { Response } from "@/types/response";
+import axios from "axios";
 import React from "react";
+import { toast } from "sonner";
 
 export default function Index({ orders }: { orders: Order[] }) {
-    console.log(orders);
+    const handleApprove = async (orderId: number) => {
+        try {
+            const response = await axios.post(`/orders/${orderId}/approve`);
+            toast.success(response.data.message);
+            window.location.reload();
+        } catch (error: any) {
+            alert(error.response?.data?.message || "Terjadi kesalahan.");
+        }
+    };
+
     return (
         <Authenticated>
             <h1 className="text-3xl font-semibold">
@@ -74,7 +85,13 @@ export default function Index({ orders }: { orders: Order[] }) {
                                         {order.status}
                                     </td>{" "}
                                     <td className="px-2 py-4 text-center">
-                                        <PrimaryButton>Terima</PrimaryButton>
+                                        <PrimaryButton
+                                            onClick={() =>
+                                                handleApprove(order.id)
+                                            }
+                                        >
+                                            Terima
+                                        </PrimaryButton>
                                     </td>
                                 </tr>
                             );
