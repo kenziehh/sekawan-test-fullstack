@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VehicleController;
@@ -27,7 +28,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/dashboard/permission', [PermissionController::class, 'index'])->name('permission.index');
     // Route::get('/dashboard/driver', [DriverController::class, 'index'])->name('driver.index');
     // Route::get('/dashboard/report', [ReportController::class, 'index'])->name('report.index');
-    // Route::get('/dashboard/log', [LogController::class, 'index'])->name('log.index');
+    Route::get('/dashboard/log', [LogController::class, 'index'])->name('log.index');
 
     //Approver
     Route::get('/dashboard/approver', [OrderController::class, 'approver'])->name('vehicle.index');
