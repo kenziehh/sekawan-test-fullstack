@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create unfinished orders and approval levels
-        foreach (range(1, 50) as $index) {
+        foreach (range(101, 150) as $index) {
             $order = Order::create([
                 'vehicle_id' => Vehicle::inRandomOrder()->first()->id,
                 'driver_id' => Driver::inRandomOrder()->first()->id,
