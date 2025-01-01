@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import FloatingSidebar from "./FloatingSidebar";
 import PrimaryButton from "./PrimaryButton";
-import { Link } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { Menu } from "lucide-react";
+import DangerButton from "./DangerButton";
+import SecondaryButton from "./SecondaryButton";
 
 const DashboardNav = ({ isAuthenticated }: { isAuthenticated?: boolean }) => {
+    const { post } = useForm();
+
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const handleLogout = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route("logout"));
+    };
     return (
         <>
             <div className="py-10 flex justify-between">
@@ -18,19 +26,9 @@ const DashboardNav = ({ isAuthenticated }: { isAuthenticated?: boolean }) => {
                 </div>
                 <div>
                     <div className="flex gap-6 items-center ">
-                        {isAuthenticated ? (
-                            <Link href={"/logout"}>
-                                <PrimaryButton className="rounded-[36px]">
-                                    Sign Out
-                                </PrimaryButton>
-                            </Link>
-                        ) : (
-                            <Link href={"/login"}>
-                                <PrimaryButton className="rounded-[36px]">
-                                    Sign In
-                                </PrimaryButton>
-                            </Link>
-                        )}
+                        <SecondaryButton onClick={handleLogout}>
+                            Logout
+                        </SecondaryButton>
                         <div className="hidden md:flex gap-9 items-center self-end"></div>
                     </div>
                 </div>
