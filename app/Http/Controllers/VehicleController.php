@@ -6,14 +6,17 @@ use App\Models\Log;
 use App\Models\Vehicle;
 use App\Http\Resources\VehicleResource;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class VehicleController extends Controller
 {
 
     public function index()
     {
-        $vehicles = Vehicle::all();
-        return VehicleResource::collection($vehicles);
+        $vehicles = Vehicle::paginate(10);
+        return Inertia::render('Vehicle/Index', [
+            'vehicles' => VehicleResource::collection($vehicles),
+        ]);
     }
 
 
