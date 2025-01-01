@@ -59,7 +59,7 @@ export default function Dashboard({
                     })}
                 </tbody>
             </table>
-            <Pagination links={vehicles.meta.links} />
+            <Pagination links={vehicles.meta?.links??[]} />
         </AuthenticatedLayout>
     );
 }
