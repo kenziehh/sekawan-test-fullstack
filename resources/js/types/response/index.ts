@@ -9,6 +9,6 @@ export interface Meta {
 
 export interface Response<T> {
     data: T;
-    links: any;
-    meta: Meta;
+    links?: any;
+    meta?: Meta;
 }

@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\ApprovalLevel;
+use App\Models\Driver;
+use App\Models\Log;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -39,5 +43,61 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         Vehicle::factory(50)->create();
+        Driver::factory(20)->create();
+
+        // Create finished orders and approval levels
+        foreach (range(1, 100) as $index) {
+            $order = Order::create([
+                'vehicle_id' => Vehicle::inRandomOrder()->first()->id,
+                'driver_id' => Driver::inRandomOrder()->first()->id,
+                'start_time' => now()->addDays(rand(1, 10)),
+                'end_time' => now()->addDays(rand(11, 20)),
+                'purpose' => 'Order purpose ' . $index,
+                'status' => 'completed',
+            ]);
+
+            // Create approval levels (minimum 2 per order)
+            foreach (range(1, 2) as $level) {
+                $approver = User::where('role', 'approver')->inRandomOrder()->first();
+                ApprovalLevel::create([
+                    'order_id' => $order->id,
+                    'approver_id' => User::where('role', 'approver')->inRandomOrder()->first()->id,
+                    'status' => 'approved',
+                ]);
+                Log::create([
+                    'action' => 'Approval',
+                    'description' => "Approver {$approver->name} approved order {$order->id}",
+                    'user_id' => $approver->id,
+                ]);
+
+            }
+        }
+
+        // Create unfinished orders and approval levels
+        foreach (range(101, 150) as $index) {
+            $order = Order::create([
+                'vehicle_id' => Vehicle::inRandomOrder()->first()->id,
+                'driver_id' => Driver::inRandomOrder()->first()->id,
+                'start_time' => now()->addDays(rand(1, 10)),
+                'end_time' => now()->addDays(rand(11, 20)),
+                'purpose' => 'Order purpose ' . $index,
+                'status' => 'pending',
+            ]);
+
+            // Create approval levels (minimum 2 per order)
+            foreach (range(1, 2) as $level) {
+                $approver = User::where('role', 'approver')->inRandomOrder()->first();
+                ApprovalLevel::create([
+                    'order_id' => $order->id,
+                    'approver_id' => User::where('role', 'approver')->inRandomOrder()->first()->id,
+                    'status' => 'pending',
+                ]);
+                Log::create([
+                    'action' => 'Approval',
+                    'description' => "Approver {$approver->name} is assigned for order {$order->id}",
+                    'user_id' => $approver->id,
+                ]);
+            }
+        }
     }
 }

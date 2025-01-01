@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\LogResource;
 use App\Models\Log;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LogController extends Controller
 {
@@ -13,8 +14,10 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::all();
-        return LogResource::collection($logs);
+        $logs = Log::orderBy('created_at', 'DESC')->paginate(10);
+        return Inertia::render('Log/Index', [
+            'logs' => LogResource::collection($logs),
+        ]);
     }
 
     /**
