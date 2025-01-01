@@ -14,7 +14,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::paginate(10);
+        $logs = Log::orderBy('created_at', 'DESC')->paginate(10);
         return Inertia::render('Log/Index', [
             'logs' => LogResource::collection($logs),
         ]);
