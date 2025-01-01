@@ -1,3 +1,4 @@
+import DangerButton from "@/Components/DangerButton";
 import Pagination from "@/Components/Pagination";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
@@ -11,6 +12,15 @@ export default function Index({ orders }: { orders: Order[] }) {
     const handleApprove = async (orderId: number) => {
         try {
             const response = await axios.post(`/orders/${orderId}/approve`);
+            toast.success(response.data.message);
+            window.location.reload();
+        } catch (error: any) {
+            alert(error.response?.data?.message || "Terjadi kesalahan.");
+        }
+    };
+    const handleDecline = async (orderId: number) => {
+        try {
+            const response = await axios.post(`/orders/${orderId}/declined`);
             toast.success(response.data.message);
             window.location.reload();
         } catch (error: any) {
@@ -84,7 +94,7 @@ export default function Index({ orders }: { orders: Order[] }) {
                                     <td className="px-3 py-2 text-center">
                                         {order.status}
                                     </td>{" "}
-                                    <td className="px-2 py-4 text-center">
+                                    <td className="px-2 py-4 text-center flex flex-col gap-2">
                                         <PrimaryButton
                                             onClick={() =>
                                                 handleApprove(order.id)
@@ -92,6 +102,13 @@ export default function Index({ orders }: { orders: Order[] }) {
                                         >
                                             Terima
                                         </PrimaryButton>
+                                        <DangerButton
+                                            onClick={() =>
+                                                handleDecline(order.id)
+                                            }
+                                        >
+                                            Tolak
+                                        </DangerButton>
                                     </td>
                                 </tr>
                             );

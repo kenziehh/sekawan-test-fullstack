@@ -13,17 +13,14 @@ class OrderController extends Controller
 {
     public function approver(Request $request)
     {
-        $userId = auth()->id(); // Assuming user is authenticated
-        // Fetch orders with necessary relationships
+        $userId = auth()->id();
         $pendingOrders = Order::with(['vehicle', 'driver', 'approvalLevels.approver'])
             ->whereHas('approvalLevels', function ($query) use ($userId) {
                 $query->where('approver_id', $userId)->where('status', 'pending');
             })
             ->get();
-
-        // Transform data to include approver names and vehicle
         $data = $pendingOrders->map(function ($order) {
-            $approvers = $order->approvalLevels->take(2); // Get the first 2 approval levels
+            $approvers = $order->approvalLevels->take(2);
             return [
                 'id' => $order->id,
                 'vehicle_name' => $order->vehicle->name,
@@ -44,11 +41,42 @@ class OrderController extends Controller
         ]);
     }
 
+    public function declined(Request $request)
+    {
+        $userId = auth()->id();
+        $pendingOrders = Order::with(['vehicle', 'driver', 'approvalLevels.approver'])
+            ->whereHas('approvalLevels', function ($query) use ($userId) {
+                $query->where('approver_id', $userId)->where('status', 'rejected');
+            })
+            ->get();
+        $data = $pendingOrders->map(function ($order) {
+            $approvers = $order->approvalLevels->take(2);
+            return [
+                'id' => $order->id,
+                'vehicle_name' => $order->vehicle->name,
+                'vehicle_type' => $order->vehicle->type,
+                'driver_name' => $order->driver->name ?? null,
+                'approver_1_name' => $approvers[0]->approver->name ?? null,
+                'approver_2_name' => $approvers[1]->approver->name ?? null,
+                'start_time' => $order->start_time,
+                'end_time' => $order->end_time,
+                'purpose' => $order->purpose,
+                'status' => $order->status,
+                'created_at' => $order->created_at,
+                'updated_at' => $order->updated_at,
+            ];
+        });
+        return Inertia::render('Approver/Declined', [
+            'orders' => $data,
+        ]);
+    }
+
+
     public function approveOrder(Request $request, $orderId)
     {
         $userId = auth()->id();
 
-        $approvalLevel = \App\Models\ApprovalLevel::where('order_id', $orderId)
+        $approvalLevel = ApprovalLevel::where('order_id', $orderId)
             ->where('approver_id', $userId)
             ->where('status', 'pending')
             ->first();
@@ -74,6 +102,34 @@ class OrderController extends Controller
         }
 
         return response()->json(['message' => 'Order berhasil di-approve.'], 200);
+    }
+
+    public function declineOrder(Request $request, $orderId)
+    {
+        $userId = auth()->id();
+
+        $approvalLevel = ApprovalLevel::where('order_id', $orderId)
+            ->where('approver_id', $userId)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$approvalLevel) {
+            return response()->json(['message' => 'Order tidak ditemukan atau sudah di-approve.'], 404);
+        }
+
+        $approvalLevel->update(['status' => 'rejected']);
+
+        Log::create([
+            'action' => 'Approval',
+            'description' => "User {$userId} rejected order {$orderId}",
+            'user_id' => $userId,
+        ]);
+
+
+        Order::where('id', $orderId)->update(['status' => 'rejected']);
+
+
+        return response()->json(['message' => 'Order berhasil di-tolak.'], 200);
     }
 
 

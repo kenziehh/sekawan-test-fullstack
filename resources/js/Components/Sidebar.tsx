@@ -80,6 +80,10 @@ const sidebarItems = {
             title: "Daftar Permintaan",
             link: "/dashboard/approver",
         },
+        {
+            title: "Daftar Penolakan",
+            link: "/dashboard/declined",
+        }
     ],
     admin: [
         {

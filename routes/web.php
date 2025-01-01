@@ -32,8 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/log', [LogController::class, 'index'])->name('log.index');
 
     //Approver
-    Route::get('/dashboard/approver', [OrderController::class, 'approver'])->name('vehicle.index');
+    Route::get('/dashboard/approver', [OrderController::class, 'approver'])->name('approver.index');
+    Route::get('/dashboard/declined', [OrderController::class, 'declined'])->name('declined.index');
     Route::post('/orders/{orderId}/approve', [OrderController::class, 'approveOrder'])->name('orders.approve');
+    Route::post('/orders/{orderId}/declined', [OrderController::class, 'declineOrder'])->name('orders.declined');
 });
 
 require __DIR__ . '/auth.php';
