@@ -83,7 +83,12 @@ const sidebarItems = {
         {
             title: "Daftar Penolakan",
             link: "/dashboard/declined",
-        }
+        },
+
+        {
+            title: "Daftar Selesai",
+            link: "/dashboard/completed",
+        },
     ],
     admin: [
         {

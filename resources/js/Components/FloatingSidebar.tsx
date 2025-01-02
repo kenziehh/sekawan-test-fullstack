@@ -97,6 +97,14 @@ const sidebarItems = {
             title: "Daftar Permintaan",
             link: "/dashboard/approver",
         },
+        {
+            title: "Daftar Penolakan",
+            link: "/dashboard/declined",
+        },
+        {
+            title: "Daftar Selesai",
+            link: "/dashboard/completed",
+        },
     ],
     admin: [
         {

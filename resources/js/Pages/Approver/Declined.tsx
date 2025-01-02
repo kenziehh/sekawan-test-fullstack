@@ -21,7 +21,7 @@ export default function Declined({ orders }: { orders: Order[] }) {
     return (
         <Authenticated>
             <h1 className="text-3xl font-semibold">
-                Daftar Permintaan Kendaraan
+                Daftar Permintaan Kendaraan Ditolak
             </h1>
 
             <main className="overflow-x-auto">

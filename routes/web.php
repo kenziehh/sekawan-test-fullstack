@@ -33,16 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/vehicle', [VehicleController::class, 'index'])->name('vehicle.index');
     Route::get('/dashboard/report', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports', [ReportController::class, 'filter'])->name('reports.filter');
-
-
-    // Route::get('/dashboard/permission', [PermissionController::class, 'index'])->name('permission.index');
     Route::get('/dashboard/driver', [DriverController::class, 'index'])->name('driver.index');
-    // Route::get('/dashboard/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/dashboard/log', [LogController::class, 'index'])->name('log.index');
 
     //Approver
     Route::get('/dashboard/approver', [OrderController::class, 'approver'])->name('approver.index');
     Route::get('/dashboard/declined', [OrderController::class, 'declined'])->name('declined.index');
+    Route::get('/dashboard/completed', [OrderController::class, 'finished'])->name('finished.index');
     Route::post('/orders/{orderId}/approve', [OrderController::class, 'approveOrder'])->name('orders.approve');
     Route::post('/orders/{orderId}/declined', [OrderController::class, 'declineOrder'])->name('orders.declined');
 });
