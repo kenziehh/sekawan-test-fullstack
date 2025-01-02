@@ -4,6 +4,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('order.store');
     Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::get('/dashboard/vehicle', [VehicleController::class, 'index'])->name('vehicle.index');
+    Route::get('/dashboard/report', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports', [ReportController::class, 'filter'])->name('reports.filter');
 
     // Route::get('/dashboard/permission', [PermissionController::class, 'index'])->name('permission.index');
     Route::get('/dashboard/driver', [DriverController::class, 'index'])->name('driver.index');

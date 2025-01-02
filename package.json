@@ -9,6 +9,7 @@
         "@headlessui/react": "^2.0.0",
         "@inertiajs/react": "^2.0.0",
         "@tailwindcss/forms": "^0.5.3",
+        "@types/file-saver": "^2.0.7",
         "@types/node": "^18.13.0",
         "@types/react": "^18.0.28",
         "@types/react-dom": "^18.0.10",
@@ -25,7 +26,9 @@
         "vite": "^6.0"
     },
     "dependencies": {
+        "file-saver": "^2.0.5",
         "lucide-react": "^0.469.0",
-        "sonner": "^1.7.1"
+        "sonner": "^1.7.1",
+        "xlsx": "^0.18.5"
     }
 }

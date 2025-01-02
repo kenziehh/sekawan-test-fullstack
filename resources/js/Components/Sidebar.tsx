@@ -99,10 +99,6 @@ const sidebarItems = {
             link: "/dashboard/vehicle",
         },
         {
-            title: "Persetujuan",
-            link: "/dashboard/permission",
-        },
-        {
             title: "Pengemudi",
             link: "/dashboard/driver",
         },
