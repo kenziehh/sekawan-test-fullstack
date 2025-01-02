@@ -101,23 +101,26 @@ export default function Index({ orders }: { orders: Response<Order[]> }) {
                                         {order.status}
                                     </td>{" "}
                                     <td className="px-2 py-4 text-center flex flex-col gap-2">
-                                        {order.status==="approved" && <PrimaryButton
-                                            onClick={() =>
-                                                handleFinish(order.id)
-                                            }
-                                            className="flex justify-center items-center"
-                                        >
-                                            Selesaikan
-                                        </PrimaryButton>}
-                                        
-                                        <DangerButton
+                                        {order.status === "approved" ? (
+                                            <PrimaryButton
+                                                onClick={() =>
+                                                    handleFinish(order.id)
+                                                }
+                                                className="flex justify-center items-center"
+                                            >
+                                                Selesaikan
+                                            </PrimaryButton>
+                                        ) : (
+                                            <div>-</div>
+                                        )}
+                                        {/* <DangerButton
                                             onClick={() =>
                                                 handleDelete(order.id)
                                             }
                                             className="flex justify-center items-center"
                                         >
                                             Hapus
-                                        </DangerButton>
+                                        </DangerButton> */}
                                     </td>
                                 </tr>
                             );
