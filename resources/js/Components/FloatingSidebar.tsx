@@ -105,7 +105,7 @@ const sidebarItems = {
         },
         {
             title: "Pemesanan Kendaraan",
-            link: "/dashboard/vehicle-order",
+            link: "/dashboard/order",
         },
         {
             title: "Daftar Kendaraan",
