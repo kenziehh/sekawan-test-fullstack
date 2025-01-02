@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //Admin
-    // Route::get('/dashboard/vehicle-order', [VehicleOrderController::class, 'index'])->name('vehicle-order.index');
+    Route::get('/dashboard/order', [OrderController::class, 'index'])->name('order.index');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::get('/dashboard/vehicle', [VehicleController::class, 'index'])->name('vehicle.index');
 
     // Route::get('/dashboard/permission', [PermissionController::class, 'index'])->name('permission.index');

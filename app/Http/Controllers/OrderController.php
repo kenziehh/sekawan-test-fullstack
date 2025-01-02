@@ -138,9 +138,38 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $perPage = 10; // You can adjust the number of items per page
 
+        $orders = Order::orderBy('created_at', 'DESC')
+            ->paginate($perPage);
+
+        $data = $orders->through(function ($order) {
+            $approvers = $order->approvalLevels->take(2);
+            return [
+                'id' => $order->id,
+                'vehicle_name' => $order->vehicle->name,
+                'vehicle_type' => $order->vehicle->type,
+                'driver_name' => $order->driver->name ?? null,
+                'approver_1_name' => $approvers[0]->approver->name ?? null,
+                'approver_2_name' => $approvers[1]->approver->name ?? null,
+                'start_time' => $order->start_time,
+                'end_time' => $order->end_time,
+                'purpose' => $order->purpose,
+                'status' => $order->status,
+                'created_at' => $order->created_at,
+                'updated_at' => $order->updated_at,
+            ];
+        });
+
+        $drivers = \App\Models\Driver::select('id', 'name')->get();
+        $approvers = \App\Models\User::select('id', 'name')->where('role', 'approver')->get();
+
+        return Inertia::render('Order/Index', [
+            'orders' => $data,
+            'drivers' => $drivers,
+            'approvers' => $approvers,
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -154,7 +183,28 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'driver_id' => 'required|exists:drivers,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'purpose' => 'required|string',
+        ]);
+
+        try {
+            $order = Order::create([
+                'driver_id' => $validated['driver_id'],
+                'vehicle_id' => $validated['vehicle_id'],
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'purpose' => $validated['purpose'],
+                'status' => 'pending',
+            ]);
+
+            return response()->json(['message' => 'Order created successfully.', 'order' => $order], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
     }
 
     /**
@@ -178,7 +228,23 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $validated = $request->validate([
+            'driver_id' => 'nullable|exists:drivers,id',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'start_time' => 'nullable|date',
+            'end_time' => 'nullable|date|after:start_time',
+            'purpose' => 'nullable|string',
+            'status' => 'nullable|in:pending,approved,rejected,completed',
+        ]);
+
+
+        try {
+            $order->update($validated);
+
+            return response()->json(['message' => 'Order updated successfully.', 'order' => $order]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
     }
 
     /**
@@ -186,6 +252,28 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found.'], 404);
+        }
+
+        try {
+            $order->forceDelete();
+
+            return response()->json(['message' => 'Order deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
+
+    public function getDropdownData()
+    {
+        $drivers = \App\Models\Driver::select('id', 'name')->get();
+        $approvers = \App\Models\User::select('id', 'name')->where('role', 'approver')->get();
+
+        return response()->json([
+            'drivers' => $drivers,
+            'approvers' => $approvers,
+        ]);
     }
 }

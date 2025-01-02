@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('approval_levels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders');
-            $table->foreignId('approver_id')->constrained('users');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('approver_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected']);
             $table->timestamps();
         });

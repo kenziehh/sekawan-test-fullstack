@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained('vehicles');
-            $table->foreignId('driver_id')->constrained('drivers');
+            $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('set null');
+            $table->foreignId('driver_id')->constrained('drivers')->onDelete('set null');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->text('purpose');
