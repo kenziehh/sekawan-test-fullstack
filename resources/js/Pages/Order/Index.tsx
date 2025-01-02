@@ -4,6 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Order } from "@/types/order";
 import { Response } from "@/types/response";
+import { Link } from "@inertiajs/react";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -30,9 +31,14 @@ export default function Index({ orders }: { orders: Response<Order[]> }) {
 
     return (
         <Authenticated>
-            <h1 className="text-3xl font-semibold">
-                Daftar Permintaan Kendaraan
-            </h1>
+            <div className="flex flex-col sm:flex-row justify-between items-center">
+                <h1 className="text-3xl font-semibold">
+                    Daftar Permintaan Kendaraan
+                </h1>
+                <Link href={route("order.create")}>
+                    <PrimaryButton>Buat Permintaan</PrimaryButton>
+                </Link>
+            </div>
 
             <main className="overflow-x-auto">
                 <table className="border border-black py-1.5 rounded-md mt-10 md:mt-20 overflow-x-auto">

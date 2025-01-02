@@ -175,7 +175,14 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $drivers = \App\Models\Driver::select('id', 'name')->get();
+        $approvers = \App\Models\User::select('id', 'name')->where('role', 'approver')->get();
+        $vehicles = \App\Models\Vehicle::select('id', 'name', 'type')->where('status', 'available')->get();
+        return Inertia::render('Order/Create', [
+            'drivers' => $drivers,
+            'approvers' => $approvers,
+            'vehicles' => $vehicles,
+        ]);
     }
 
     /**
@@ -189,8 +196,9 @@ class OrderController extends Controller
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
             'purpose' => 'required|string',
+            'approver_1_id' => 'required|exists:users,id',
+            'approver_2_id' => 'required|exists:users,id',
         ]);
-
         try {
             $order = Order::create([
                 'driver_id' => $validated['driver_id'],
@@ -201,8 +209,25 @@ class OrderController extends Controller
                 'status' => 'pending',
             ]);
 
+            ApprovalLevel::create([
+                'order_id' => $order->id,
+                'approver_id' => $validated['approver_1_id'],
+                'status' => 'pending',
+            ]);
+            ApprovalLevel::create([
+                'order_id' => $order->id,
+                'approver_id' => $validated['approver_2_id'],
+                'status' => 'pending',
+            ]);
+
+            Log::create([
+                'action' => 'Create Order',
+                'description' => "User {$request->user()->id} created order {$order->id}",
+                'user_id' => $request->user()->id,
+            ]);
             return response()->json(['message' => 'Order created successfully.', 'order' => $order], 201);
         } catch (\Exception $e) {
+
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
@@ -252,6 +277,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
+        $userId = auth()->id();
 
         if (!$order) {
             return response()->json(['error' => 'Order not found.'], 404);
@@ -259,7 +285,11 @@ class OrderController extends Controller
 
         try {
             $order->forceDelete();
-
+            Log::create([
+                'action' => 'Delete Order',
+                'description' => "User {$userId} deleted order {$order->id}",
+                'user_id' => $userId,
+            ]);
             return response()->json(['message' => 'Order deleted successfully.']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 422);
