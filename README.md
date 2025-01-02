@@ -106,4 +106,58 @@ php artisan serve
   - Password: `approver123`  
   - Role: `approver`
 
+# Screenshoots
+
+## Login
+
+![image](https://github.com/user-attachments/assets/4d0a609e-7204-4914-8804-60a7d5afc607)
+
+## Dashboard Admin Main
+
+![image](https://github.com/user-attachments/assets/e4f9106a-a5a8-4e19-a038-85c5879fdaab)
+![image](https://github.com/user-attachments/assets/b5c6a7c1-a04a-4019-96a4-162e9665a7a8)
+
+## Dashboard Admin List Permintaan Kendaraan
+
+![image](https://github.com/user-attachments/assets/974d5b73-0663-45ee-87cb-bed5be131102)
+
+## Dashboard Admin Form Permintaan Kendaraan
+![image](https://github.com/user-attachments/assets/5c376ad5-de91-478c-b889-02a5fc2fa3bd)
+
+## Dashboard Admin Daftar Kendaraan
+
+![image](https://github.com/user-attachments/assets/3d59a9e6-f6da-42bf-ba81-56815f619584)
+
+## Dashboard Admin Daftar Pengemudi
+
+![image](https://github.com/user-attachments/assets/853980e0-0f74-4f41-987f-2bc8aa0f9af8)
+
+## Dashboard Admin Laporan dan Export Excel
+
+![image](https://github.com/user-attachments/assets/9ee4711d-2171-4972-8e76-486f742b75c0)
+
+## Dashboard Admin Log Aktivitas
+
+![image](https://github.com/user-attachments/assets/0274ec9b-7aee-4ce7-b57a-0d33b4a0ec10)
+
+## Dashboard Approver List Permintaan Persetujuan
+
+![image](https://github.com/user-attachments/assets/d78592a6-aea0-4094-8670-d8bd077d358a)
+
+## Dashboard Approver List Permintaan Yang Ditolak
+
+![image](https://github.com/user-attachments/assets/e23d53b5-8d05-46a1-b79f-f20f790d21bb)
+
+## Dashboard Approver List Permintaan Yang Sudah Selesai
+
+![image](https://github.com/user-attachments/assets/43467227-604b-4cb8-9e8d-b002dff59aa8)
+
+
+
+
+
+
+
+
+
 
