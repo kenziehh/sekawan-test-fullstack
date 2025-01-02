@@ -41,7 +41,7 @@ export default function Index({ orders }: { orders: Response<Order[]> }) {
             </div>
 
             <main className="overflow-x-auto">
-                <table className="border border-black py-1.5 rounded-md mt-10 md:mt-20 overflow-x-auto">
+                <table className="border border-black py-1.5 rounded-md mt-10 md:mt-20 overflow-x-auto w-full">
                     <thead>
                         <tr className="bg-primary-blue font-semibold text-lg">
                             <th className="px-2 py-4 text-center">Pengemudi</th>
