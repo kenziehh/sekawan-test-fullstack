@@ -9,9 +9,9 @@ import axios from "axios";
 import { toast } from "sonner";
 
 export default function Index({ orders }: { orders: Response<Order[]> }) {
-    const handleApprove = async (orderId: number) => {
+    const handleFinish = async (orderId: number) => {
         try {
-            const response = await axios.post(`/orders/${orderId}/approve`);
+            const response = await axios.post(`/orders/${orderId}/finish`);
             toast.success(response.data.message);
             window.location.reload();
         } catch (error: any) {
@@ -101,10 +101,20 @@ export default function Index({ orders }: { orders: Response<Order[]> }) {
                                         {order.status}
                                     </td>{" "}
                                     <td className="px-2 py-4 text-center flex flex-col gap-2">
+                                        {order.status==="approved" && <PrimaryButton
+                                            onClick={() =>
+                                                handleFinish(order.id)
+                                            }
+                                            className="flex justify-center items-center"
+                                        >
+                                            Selesaikan
+                                        </PrimaryButton>}
+                                        
                                         <DangerButton
                                             onClick={() =>
                                                 handleDelete(order.id)
                                             }
+                                            className="flex justify-center items-center"
                                         >
                                             Hapus
                                         </DangerButton>

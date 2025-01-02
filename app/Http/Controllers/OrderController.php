@@ -101,7 +101,29 @@ class OrderController extends Controller
             'orders' => $data,
         ]);
     }
+    public function completeOrder(Request $request, $orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found.'], 404);
+        }
 
+        $order->update(['status' => 'completed']);
+
+        $vehicle = $order->vehicle;
+        if ($vehicle) {
+            $vehicle->update(['status' => 'available']);
+        }
+
+        $userId = auth()->id();
+        Log::create([
+            'action' => 'Complete Order',
+            'description' => "User {$userId} marked order {$orderId} as completed and vehicle {$vehicle->name} as available.",
+            'user_id' => $userId,
+        ]);
+
+        return response()->json(['message' => 'Order completed and vehicle status updated to available.'], 200);
+    }
 
     public function approveOrder(Request $request, $orderId)
     {

@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/completed', [OrderController::class, 'finished'])->name('finished.index');
     Route::post('/orders/{orderId}/approve', [OrderController::class, 'approveOrder'])->name('orders.approve');
     Route::post('/orders/{orderId}/declined', [OrderController::class, 'declineOrder'])->name('orders.declined');
+    Route::post('/orders/{orderId}/finish', [OrderController::class, 'completeOrder'])->name('orders.declined');
+
 });
 
 require __DIR__ . '/auth.php';
