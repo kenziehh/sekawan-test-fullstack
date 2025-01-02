@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //Admin
+    Route::get('/charts', [DashboardController::class, 'chart'])->name('dashboard.chart');
     Route::get('/dashboard/order', [OrderController::class, 'index'])->name('order.index');
     Route::get('/dashboard/order/create', [OrderController::class, 'create'])->name('order.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('order.store');
@@ -31,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/vehicle', [VehicleController::class, 'index'])->name('vehicle.index');
     Route::get('/dashboard/report', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports', [ReportController::class, 'filter'])->name('reports.filter');
+
 
     // Route::get('/dashboard/permission', [PermissionController::class, 'index'])->name('permission.index');
     Route::get('/dashboard/driver', [DriverController::class, 'index'])->name('driver.index');
