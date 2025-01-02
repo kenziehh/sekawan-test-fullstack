@@ -12,8 +12,15 @@ class DashboardController extends Controller
 {
     public function chart()
     {
-        $vehicleStats = Vehicle::select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
+        $vehicleTypeStatusStats = Vehicle::select('type', 'status', DB::raw('count(*) as total'))
+            ->groupBy('type', 'status')
+            ->get();
+
+        $topVehicles = Order::select('vehicles.name', DB::raw('count(orders.id) as total'))
+            ->join('vehicles', 'orders.vehicle_id', '=', 'vehicles.id')
+            ->groupBy('vehicles.name')
+            ->orderBy('total', 'desc')
+            ->take(5)
             ->get();
 
         $orderStats = Order::select(DB::raw('MONTH(start_time) as month'), DB::raw('count(*) as total'))
@@ -25,27 +32,11 @@ class DashboardController extends Controller
             ->groupBy('type')
             ->get();
 
-        $chartData = [
-            'vehicle_status' => $vehicleStats->map(function ($item) {
-                return [
-                    'status' => $item->status,
-                    'total' => $item->total,
-                ];
-            }),
-            'order_per_month' => $orderStats->map(function ($item) {
-                return [
-                    'month' => $item->month,
-                    'total' => $item->total,
-                ];
-            }),
-            'vehicle_types' => $vehicleTypeStats->map(function ($item) {
-                return [
-                    'type' => $item->type,
-                    'total' => $item->total,
-                ];
-            })
-        ];
-
-        return response()->json($chartData);
+        return response()->json([
+            'vehicle_type_status' => $vehicleTypeStatusStats,
+            'top_vehicles' => $topVehicles,
+            'order_per_month' => $orderStats,
+            'vehicle_types' => $vehicleTypeStats,
+        ]);
     }
 }
