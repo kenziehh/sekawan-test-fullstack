@@ -21,6 +21,10 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
+        $vehicleTypeStats = Vehicle::select('type', DB::raw('count(*) as total'))
+            ->groupBy('type')
+            ->get();
+
         $chartData = [
             'vehicle_status' => $vehicleStats->map(function ($item) {
                 return [
@@ -34,6 +38,12 @@ class DashboardController extends Controller
                     'total' => $item->total,
                 ];
             }),
+            'vehicle_types' => $vehicleTypeStats->map(function ($item) {
+                return [
+                    'type' => $item->type,
+                    'total' => $item->total,
+                ];
+            })
         ];
 
         return response()->json($chartData);
